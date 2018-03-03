@@ -10,7 +10,7 @@ This is a small module intended to facilitate reading .mat files containing larg
 
 
 def read_mat(filename, variable_names = None, ignore_fields=[]):
-
+    
     """This function reads .mat files of version <7.3 or 7.3 and returns the contained data structure
     as a dictionary of nested substructure similar to scipy.io.loadmat style.
 
@@ -45,7 +45,6 @@ def read_mat(filename, variable_names = None, ignore_fields=[]):
 
 
 def _browse(struct, hdf5_file, variable_names = None, ignore_fields=[]):
-
     """private function which runs through h5py structure recursively, creating subdicts for every substructure.
     calls _browse_dataset() to extract values"""
     
@@ -60,7 +59,6 @@ def _browse(struct, hdf5_file, variable_names = None, ignore_fields=[]):
 
 
 def _browse_dataset(struct, hdf5_file):
-
     """private function, which recursively browses through h5py Dataset to extract values. Calls _assign_types()
     to assign data types"""
     
@@ -81,7 +79,6 @@ def _browse_dataset(struct, hdf5_file):
 
 
 def _assign_types(values):
-
     """private function, which assigns correct types to h5py extracted values from _browse_dataset()"""
     
     if type(values) == numpy.ndarray:
@@ -101,9 +98,9 @@ def _assign_types(values):
     
     
 def _check_keys(data_dict):
-
-    """private function to enhance scipy.io.loadmat. checks if entries in dictionary are mat-objects.
-    If yes _todict is called to change them to nested dictionaries"""
+    """private function to enhance scipy.io.loadmat. Checks if entries in dictionary are mat-objects.
+    If yes _todict is called to change them to nested dictionaries. Idea taken from:
+    <stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries>"""
     
     for key in data_dict:
         if isinstance(data_dict[key], scipy.io.matlab.mio5_params.mat_struct):
@@ -112,7 +109,6 @@ def _check_keys(data_dict):
 
 
 def _todict(matobj):
-
     """private function to enhance scipy.io.loadmat. 
     A recursive function which constructs from matobjects nested dictionaries"""
     
