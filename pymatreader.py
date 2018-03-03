@@ -5,7 +5,8 @@ import scipy.io
 __all__ = 'read_mat'
 
 """
-This is a small module intended to facilitate reading .mat files containing large data structures into python.
+This is a small module intended to facilitate reading .mat files containing large data structures into python,
+disregarding of the underlying .mat file version.
 """
 
 
