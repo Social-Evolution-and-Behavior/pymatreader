@@ -111,7 +111,8 @@ def _check_keys(data_dict):
 
 def _todict(matobj):
     """private function to enhance scipy.io.loadmat. 
-    A recursive function which constructs from matobjects nested dictionaries"""
+    A recursive function which constructs from matobjects nested dictionaries. Idea taken from:
+    <stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries>"""
     
     data_dict = {}
     for strg in matobj._fieldnames:
