@@ -2,6 +2,8 @@ import h5py
 import numpy
 import scipy.io
 
+from builtins import chr # This is needed for python 2 and 3 compatibility
+
 __all__ = 'read_mat'
 
 """
@@ -34,12 +36,12 @@ def read_mat(filename, variable_names = None, ignore_fields=[]):
     try:
         hdf5_file = scipy.io.loadmat(filename, struct_as_record=False, squeeze_me=True, variable_names=variable_names)
         data = _check_keys(hdf5_file)
-        print "finished loading .mat file <v7.3"
+        print("finished loading .mat file <v7.3")
     except NotImplementedError:
         hdf5_file = h5py.File(filename, "r")
         data = _browse(hdf5_file, hdf5_file, variable_names=variable_names, ignore_fields=ignore_fields)
         hdf5_file.close()
-        print "finished loading .mat file v7.3"
+        print("finished loading .mat file v7.3")
     return data
 
 
@@ -86,9 +88,9 @@ def _assign_types(values):
         values = numpy.squeeze(values)
         if values.dtype in ("uint8","uint16","uint32"):
             if values.size > 1:
-                assigned_values = u''.join(unichr(c) for c in values)
+                assigned_values = u''.join(chr(c) for c in values)
             else:
-                assigned_values = unichr(values)
+                assigned_values = chr(values)
         else:
             assigned_values = values
     elif type(values) == numpy.float64:
