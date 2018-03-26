@@ -45,7 +45,7 @@ a_struct.string = random_string(20);
 a_struct.int = randi(255, 1);
 a_struct.float = rand(1);
 a_struct.matrix = rand(100, 100);
-a_struct.cell_array = {};
+a_struct.a_cell_array = {};
 for idx_cells = 1:100
   a_struct.a_cell_array{idx_cells} = rand(2, 5);
 end %for
@@ -55,7 +55,7 @@ a_struct.second_level.string = random_string(20);
 a_struct.second_level.int = randi(255, 1);
 a_struct.second_level.float = rand(1);
 a_struct.second_level.matrix = rand(100, 100);
-a_struct.second_level.cell_array = {};
+a_struct.second_level.a_cell_array = {};
 for idx_cells = 1:100
   a_struct.second_level.a_cell_array{idx_cells} = rand(2, 5);
 end %for
