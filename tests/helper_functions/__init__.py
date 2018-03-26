@@ -17,6 +17,8 @@
 
 import numpy
 from nose.tools import assert_almost_equal, assert_equal
+import xmltodict
+import string
 
 def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
     # This code has been adapted from https://github.com/larsbutler/oq-engine/blob/master/tests/utils/helpers.py
@@ -61,3 +63,38 @@ def sanitize_dict(d):
     d = {k:d[k] for k in d if not k.startswith('__')}
 
     return d
+
+def read_xml_data(f_name):
+    with open(f_name, 'rb') as xml_file:
+        xml_data = xmltodict.parse(xml_file)
+
+    new_data = _convert_strings2numbers_xml(xml_data)
+
+    return new_data['test_data']['for_xml']
+
+def _convert_strings2numbers_xml(xml_data):
+    if isinstance(xml_data, dict):
+        if len(xml_data.keys()) == 1 and list(xml_data.keys())[0] == 'item' and isinstance(xml_data['item'], list):
+            xml_data = numpy.array(_convert_strings2numbers_xml(xml_data['item']))
+        else:
+            for cur_key in xml_data.keys():
+                xml_data[cur_key] = _convert_strings2numbers_xml(xml_data[cur_key])
+    elif isinstance(xml_data, list):
+        new_list = []
+        for cur_item in xml_data:
+            new_list.append(_convert_strings2numbers_xml(cur_item))
+
+        xml_data = new_list
+    elif isinstance(xml_data, str) and _is_string_matrix(xml_data):
+        try:
+            xml_data = numpy.array(numpy.matrix(xml_data))
+            if xml_data.size == 1:
+                xml_data = xml_data[0][0]
+        except ValueError:
+            pass
+
+    return xml_data
+
+def _is_string_matrix(value):
+    ok = string.digits + '.,; []e-'
+    return all(c in ok for c in value)
