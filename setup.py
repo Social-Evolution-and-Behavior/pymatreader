@@ -11,7 +11,7 @@ REQUIRED = [
 setup(
     name='pymatreader',
     version='0.0.1',
-    packages=['tests', 'tests.helper_functions'],
+    packages=['pymatreader'],
     url='https://gitlab.com/obob/pymatreader',
     license='GPL3',
     author='Dirk Gütlin & Thomas Hartmann',
