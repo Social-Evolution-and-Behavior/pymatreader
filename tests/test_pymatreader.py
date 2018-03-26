@@ -17,7 +17,7 @@
 
 from pymatreader import read_mat
 import os.path
-from .test_helpers import assertDeepAlmostEqual
+from .test_helpers import assertDeepAlmostEqual, sanitize_dict
 
 from unittest import TestCase
 TestCase.maxDiff = None
@@ -28,13 +28,19 @@ testdata_v7_fname = 'v7.mat'
 testdata_v73_fname = 'v73.mat'
 
 def test_v6v7():
-    v6_data = read_mat(os.path.join(test_data_folder, testdata_v6_fname))
-    v7_data = read_mat(os.path.join(test_data_folder, testdata_v7_fname))
+    v6_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v6_fname)))
+    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
 
     assertDeepAlmostEqual(v6_data, v7_data)
 
 def test_v6v73():
-    v6_data = read_mat(os.path.join(test_data_folder, testdata_v6_fname))
-    v73_data = read_mat(os.path.join(test_data_folder, testdata_v73_fname))
+    v6_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v6_fname)))
+    v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v73_fname)))
 
     assertDeepAlmostEqual(v6_data, v73_data)
+
+def test_v7v73():
+    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
+    v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v73_fname)))
+
+    assertDeepAlmostEqual(v7_data, v73_data)
