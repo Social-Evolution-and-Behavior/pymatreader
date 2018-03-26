@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 # Copyright (c) 2018, Dirk Gütlin & Thomas Hartmann
 #
 # This file is part of the pymatreader Project, see: https://gitlab.com/obob/pymatreader
