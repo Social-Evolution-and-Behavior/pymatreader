@@ -2,3 +2,4 @@ h5py
 scipy
 numpy
 nose
+xml2dict
