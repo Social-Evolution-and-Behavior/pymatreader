@@ -12,10 +12,10 @@ setup(
     name='pymatreader',
     version='0.0.1',
     packages=['tests', 'tests.helper_functions'],
-    url='',
-    license='',
+    url='https://gitlab.com/obob/pymatreader',
+    license='GPL3',
     author='Dirk Gütlin & Thomas Hartmann',
     author_email='',
-    description='',
+    description='Convenient reader for Matlab mat files',
     install_requires=REQUIRED,
 )
