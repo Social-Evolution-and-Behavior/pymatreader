@@ -2,8 +2,6 @@
 #
 # This file is part of the pymatreader Project, see: https://gitlab.com/obob/pymatreader
 #
-# This code has been adapted from https://github.com/larsbutler/oq-engine/blob/master/tests/utils/helpers.py
-#
 #    pymatreader is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -21,6 +19,8 @@ import numpy
 from nose.tools import assert_almost_equal, assert_equal
 
 def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
+    # This code has been adapted from https://github.com/larsbutler/oq-engine/blob/master/tests/utils/helpers.py
+
     """
     Assert that two complex structures have almost equal contents.
 
