@@ -18,6 +18,7 @@
 from pymatreader import read_mat
 import os.path
 from .test_helpers import assertDeepAlmostEqual, sanitize_dict
+import xmltodict
 
 from unittest import TestCase
 TestCase.maxDiff = None
@@ -26,6 +27,7 @@ test_data_folder = 'tests/test_data'
 testdata_v6_fname = 'v6.mat'
 testdata_v7_fname = 'v7.mat'
 testdata_v73_fname = 'v73.mat'
+testdata_xml = 'xmldata.xml'
 
 def test_v6v7():
     v6_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v6_fname)))
@@ -44,3 +46,10 @@ def test_v7v73():
     v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v73_fname)))
 
     assertDeepAlmostEqual(v7_data, v73_data)
+
+def test_xmlv7():
+    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
+    with open(os.path.join(test_data_folder, testdata_xml), 'rb') as xml_file:
+        xml_data = xmltodict.parse(xml_file)
+
+    pass
