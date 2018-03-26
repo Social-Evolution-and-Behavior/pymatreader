@@ -59,3 +59,5 @@ def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
 
 def sanitize_dict(d):
     d = {k:d[k] for k in d if not k.startswith('__')}
+
+    return d
