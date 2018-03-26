@@ -2,7 +2,7 @@ h5py
 scipy
 numpy
 nose
-xml2dict
+xmltodict
 sphinx
 sphinx-autobuild
 sphinx_rtd_theme
