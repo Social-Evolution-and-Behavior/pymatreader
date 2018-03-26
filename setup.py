@@ -5,6 +5,7 @@ REQUIRED = [
     'scipy',
     'numpy',
     'xmltodict',
+    'future',
 ]
 
 setup(

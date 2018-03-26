@@ -20,6 +20,7 @@ import numpy
 from nose.tools import assert_almost_equal, assert_equal
 import xmltodict
 import string
+from six import string_types
 
 def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
     # This code has been adapted from https://github.com/larsbutler/oq-engine/blob/master/tests/utils/helpers.py
@@ -86,9 +87,9 @@ def _convert_strings2numbers_xml(xml_data):
             new_list.append(_convert_strings2numbers_xml(cur_item))
 
         xml_data = new_list
-    elif isinstance(xml_data, str) and _is_string_matrix(xml_data):
+    elif isinstance(xml_data, string_types) and _is_string_matrix(xml_data):
         try:
-            xml_data = numpy.array(numpy.matrix(xml_data))
+            xml_data = numpy.array(numpy.matrix(str(xml_data)))
             if xml_data.size == 1:
                 xml_data = xml_data[0][0]
         except ValueError:
