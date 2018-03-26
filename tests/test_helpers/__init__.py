@@ -55,3 +55,7 @@ def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
             trace = ' -> '.join(reversed(exc.traces))
             exc = AssertionError("%s\nTRACE: %s" % (exc.message, trace))
         raise exc
+
+
+def sanitize_dict(d):
+    d = {k:d[k] for k in d if not k.startswith('__')}
