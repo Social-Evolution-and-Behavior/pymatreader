@@ -63,3 +63,5 @@ target/
 
 # other backup and lock files...
 .~*
+
+*.m~
