@@ -10,11 +10,6 @@ Welcome to pymatreader's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+.. automodule:: pymatreader
+    :members: read_mat
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
