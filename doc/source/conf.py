@@ -24,9 +24,9 @@ copyright = '2018, Dirk Gütlin & Thomas Hartmann'
 author = 'Dirk Gütlin & Thomas Hartmann'
 
 # The short X.Y version
-version = ''
+version = '0.0.1'
 # The full version, including alpha/beta/rc tags
-release = ''
+release = '0.0.1'
 
 
 # -- General configuration ---------------------------------------------------
