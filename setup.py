@@ -1,5 +1,6 @@
 from setuptools import setup
 import os.path
+from codecs import open
 
 REQUIRED = [
     'h5py',

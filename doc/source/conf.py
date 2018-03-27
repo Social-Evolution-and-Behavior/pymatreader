@@ -14,6 +14,7 @@
 #
 import os
 import sys
+from codecs import open
 sys.path.insert(0, os.path.abspath('../..'))
 
 
