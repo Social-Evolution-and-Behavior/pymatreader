@@ -32,4 +32,12 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=REQUIRED,
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+    ],
+    keywords='Matlab HDF5 import'
 )
