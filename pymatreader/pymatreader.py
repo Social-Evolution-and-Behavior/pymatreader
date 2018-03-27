@@ -31,7 +31,7 @@ disregarding of the underlying .mat file version.
 """
 
 
-def read_mat(filename, variable_names=None, ignore_fields=[]):
+def read_mat(filename, variable_names=None, ignore_fields=None):
     """This function reads .mat files of version <7.3 or 7.3 and returns the contained data structure
     as a dictionary of nested substructure similar to scipy.io.loadmat style.
 
@@ -51,6 +51,8 @@ def read_mat(filename, variable_names=None, ignore_fields=[]):
         A structure of nested dictionaries, with variable names as keys and variable data as values.
     """
 
+    if ignore_fields is None:
+        ignore_fields = []
     try:
         hdf5_file = scipy.io.loadmat(filename, struct_as_record=False, squeeze_me=True, variable_names=variable_names)
         data = _check_keys(hdf5_file)
@@ -63,10 +65,12 @@ def read_mat(filename, variable_names=None, ignore_fields=[]):
     return data
 
 
-def _browse(struct, hdf5_file, variable_names=None, ignore_fields=[]):
+def _browse(struct, hdf5_file, variable_names=None, ignore_fields=None):
     """private function which runs through h5py structure recursively, creating subdicts for every substructure.
     calls _browse_dataset() to extract values"""
 
+    if ignore_fields is None:
+        ignore_fields = []
     copy = {}
     for key, value in zip(struct, struct.values()):
         if key not in ignore_fields and (not variable_names or key in variable_names) and key != '#refs#':
