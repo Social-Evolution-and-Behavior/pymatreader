@@ -10,3 +10,4 @@ tox
 future
 twine
 wheel
+readme_renderer
