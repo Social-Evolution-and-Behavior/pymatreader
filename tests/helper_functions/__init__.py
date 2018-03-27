@@ -16,11 +16,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with obob_subjectdb. If not, see <http://www.gnu.org/licenses/>.
 
-import numpy
-from nose.tools import assert_almost_equal, assert_equal
-import xmltodict
 import string
+
+import numpy
+import xmltodict
+from nose.tools import assert_almost_equal, assert_equal
 from six import string_types
+
 
 def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
     # This code has been adapted from https://github.com/larsbutler/oq-engine/blob/master/tests/utils/helpers.py
@@ -62,9 +64,10 @@ def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
 
 
 def sanitize_dict(d):
-    d = {k:d[k] for k in d if not k.startswith('__')}
+    d = {k: d[k] for k in d if not k.startswith('__')}
 
     return d
+
 
 def read_xml_data(f_name):
     with open(f_name, 'rb') as xml_file:
@@ -73,6 +76,7 @@ def read_xml_data(f_name):
     new_data = _convert_strings2numbers_xml(xml_data)
 
     return new_data['test_data']['for_xml']
+
 
 def _convert_strings2numbers_xml(xml_data):
     if isinstance(xml_data, dict):
@@ -96,6 +100,7 @@ def _convert_strings2numbers_xml(xml_data):
             pass
 
     return xml_data
+
 
 def _is_string_matrix(value):
     ok = string.digits + '.,; []e-'

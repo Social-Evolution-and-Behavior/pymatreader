@@ -17,11 +17,11 @@
 #    along with obob_subjectdb. If not, see <http://www.gnu.org/licenses/>.
 
 
+from builtins import chr  # This is needed for python 2 and 3 compatibility
+
 import h5py
 import numpy
 import scipy.io
-
-from builtins import chr # This is needed for python 2 and 3 compatibility
 
 __all__ = 'read_mat'
 
@@ -31,8 +31,7 @@ disregarding of the underlying .mat file version.
 """
 
 
-def read_mat(filename, variable_names = None, ignore_fields=[]):
-    
+def read_mat(filename, variable_names=None, ignore_fields=[]):
     """This function reads .mat files of version <7.3 or 7.3 and returns the contained data structure
     as a dictionary of nested substructure similar to scipy.io.loadmat style.
 
@@ -64,12 +63,10 @@ def read_mat(filename, variable_names = None, ignore_fields=[]):
     return data
 
 
-
-
-def _browse(struct, hdf5_file, variable_names = None, ignore_fields=[]):
+def _browse(struct, hdf5_file, variable_names=None, ignore_fields=[]):
     """private function which runs through h5py structure recursively, creating subdicts for every substructure.
     calls _browse_dataset() to extract values"""
-    
+
     copy = {}
     for key, value in zip(struct, struct.values()):
         if key not in ignore_fields and (not variable_names or key in variable_names) and key != '#refs#':
@@ -83,14 +80,14 @@ def _browse(struct, hdf5_file, variable_names = None, ignore_fields=[]):
 def _browse_dataset(struct, hdf5_file):
     """private function, which recursively browses through h5py Dataset to extract values. Calls _assign_types()
     to assign data types"""
-    
-    if type(struct) in (h5py._hl.dataset.Dataset,numpy.ndarray):
+
+    if type(struct) in (h5py._hl.dataset.Dataset, numpy.ndarray):
         if struct.size > 1:
             content = numpy.squeeze(struct).T
-            for ind,val in enumerate(content):
-                content[ind] = _browse_dataset(val,hdf5_file)
+            for ind, val in enumerate(content):
+                content[ind] = _browse_dataset(val, hdf5_file)
         elif type(struct) == h5py._hl.dataset.Dataset:
-            content = _browse_dataset(struct.value,hdf5_file)
+            content = _browse_dataset(struct.value, hdf5_file)
         elif type(struct) == numpy.ndarray:
             content = _browse_dataset(struct[0], hdf5_file)
     elif type(struct) == h5py.h5r.Reference:
@@ -102,10 +99,10 @@ def _browse_dataset(struct, hdf5_file):
 
 def _assign_types(values):
     """private function, which assigns correct types to h5py extracted values from _browse_dataset()"""
-    
+
     if type(values) == numpy.ndarray:
         values = numpy.squeeze(values)
-        if values.dtype in ("uint8","uint16","uint32"):
+        if values.dtype in ("uint8", "uint16", "uint32"):
             if values.size > 1:
                 assigned_values = u''.join(chr(c) for c in values)
             else:
@@ -117,13 +114,13 @@ def _assign_types(values):
     else:
         assigned_values = values
     return assigned_values
-    
-    
+
+
 def _check_keys(data_dict):
     """private function to enhance scipy.io.loadmat. Checks if entries in dictionary are mat-objects.
     If yes _todict is called to change them to nested dictionaries. Idea taken from:
     <stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries>"""
-    
+
     for key in data_dict:
         if isinstance(data_dict[key], scipy.io.matlab.mio5_params.mat_struct):
             data_dict[key] = _todict(data_dict[key])
@@ -134,7 +131,7 @@ def _todict(matobj):
     """private function to enhance scipy.io.loadmat. 
     A recursive function which constructs from matobjects nested dictionaries. Idea taken from:
     <stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries>"""
-    
+
     data_dict = {}
     for strg in matobj._fieldnames:
         elem = matobj.__dict__[strg]
