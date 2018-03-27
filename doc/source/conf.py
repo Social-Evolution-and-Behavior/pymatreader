@@ -24,9 +24,11 @@ copyright = '2018, Dirk Gütlin & Thomas Hartmann'
 author = 'Dirk Gütlin & Thomas Hartmann'
 
 # The short X.Y version
-version = '0.0.1'
+with open(os.path.join(os.path.abspath('../..'), 'VERSION'), encoding='utf-8') as f:
+    version = f.read()
+
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = version
 
 
 # -- General configuration ---------------------------------------------------

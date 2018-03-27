@@ -16,10 +16,13 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+with open(os.path.join(this_directory, 'VERSION'), encoding='utf-8') as f:
+    version = f.read()
+
 
 setup(
     name='pymatreader',
-    version='0.0.1',
+    version=version,
     packages=['pymatreader'],
     url='https://gitlab.com/obob/pymatreader',
     license='GPL3',
