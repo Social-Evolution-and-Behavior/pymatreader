@@ -1,4 +1,5 @@
 from distutils.core import setup
+import os.path
 
 REQUIRED = [
     'h5py',
@@ -7,6 +8,14 @@ REQUIRED = [
     'xmltodict',
     'future',
 ]
+
+# find the location of this file
+this_directory = os.path.abspath(os.path.dirname(__file__))
+
+# Get the long description from the README file
+with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 
 setup(
     name='pymatreader',
@@ -17,6 +26,7 @@ setup(
     author='Dirk Gütlin & Thomas Hartmann',
     author_email='thomas.hartmann@th-ht.de',
     description='Convenient reader for Matlab mat files',
-    long_description='Convenient reader for Matlab mat files. This package works with the <= 7 and 7.3 (i.e. HDF5) versions. A dictionary is returned, vectors and matrices are converted to numpy arrays.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     install_requires=REQUIRED,
 )

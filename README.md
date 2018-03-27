@@ -9,5 +9,7 @@ from pymatreader import read_mat
 data = read_mat(filename)
 ```
 
+`data` is a python `dict` containing all variables of the mat file.
+
 ## License
 This module is developed by Dirk Gütlin & Thomas Hartmann at the Universität Salzburg. You are free to use, copy, modify, distribute it under the terms of the GPL3.
