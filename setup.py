@@ -1,6 +1,7 @@
-from setuptools import setup
 import os.path
 from codecs import open
+
+from setuptools import setup
 
 REQUIRED = [
     'h5py',
@@ -19,7 +20,6 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 with open(os.path.join(this_directory, 'VERSION'), encoding='utf-8') as f:
     version = f.read()
-
 
 setup(
     name='pymatreader',
