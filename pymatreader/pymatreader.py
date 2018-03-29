@@ -58,54 +58,64 @@ def read_mat(filename, variable_names=None, ignore_fields=None):
         data = _check_for_scipy_mat_struct(hdf5_file)
         print("finished loading .mat file <v7.3")
     except NotImplementedError:
-        hdf5_file = h5py.File(filename, "r")
-        data = _browse(hdf5_file, hdf5_file, variable_names=variable_names, ignore_fields=ignore_fields)
-        hdf5_file.close()
+        ignore_fields.append('#refs#')
+        with h5py.File(filename, 'r') as hdf5_file:
+            data = _hdf5todict(hdf5_file, variable_names=variable_names, ignore_fields=ignore_fields)
         print("finished loading .mat file v7.3")
     return data
 
 
-def _browse(struct, hdf5_file, variable_names=None, ignore_fields=None):
-    """private function which runs through h5py structure recursively, creating subdicts for every substructure.
-    calls _browse_dataset() to extract values"""
 
-    if ignore_fields is None:
-        ignore_fields = []
-    copy = {}
-    for key, value in zip(struct, struct.values()):
-        if key not in ignore_fields and (not variable_names or key in variable_names) and key != '#refs#':
-            if type(value) == h5py._hl.group.Group:
-                copy[key] = _browse(value, hdf5_file, ignore_fields=ignore_fields)
-            else:
-                copy[key] = _browse_dataset(value, hdf5_file)
-    return copy
+def _hdf5todict(hdf5_object, variable_names=None, ignore_fields=None):
+    """
+    Recursively converts a hdf5 object to a python dictionary, converting all types as well.
 
+    Parameters
+    ----------
+    hdf5_object: Union[h5py.Group, h5py.Dataset]
+        Object to convert. Can be a h5py File, Group or Dataset
+    variable_names: iterable, optional
+        Tuple or list of variables to include. If set to none, all variable are read.
+    ignore_fields: iterable, optional
+        Tuple or list of fields to ignore. If set to none, all fields will be read.
 
-def _browse_dataset(struct, hdf5_file):
-    """private function, which recursively browses through h5py Dataset to extract values. Calls _assign_types()
-    to assign data types"""
+    Returns
+    -------
+    dict
+        Python dictionary
+    """
+    if isinstance(hdf5_object, h5py.Group):
+        all_keys = set(hdf5_object.keys())
+        if ignore_fields:
+            all_keys = all_keys - set(ignore_fields)
 
-    if type(struct) in (h5py._hl.dataset.Dataset, numpy.ndarray):
-        if struct.size > 1:
-            content = numpy.squeeze(struct).T
-            for ind, val in enumerate(content):
-                content[ind] = _browse_dataset(val, hdf5_file)
-        elif type(struct) == h5py._hl.dataset.Dataset:
-            content = _browse_dataset(struct.value, hdf5_file)
-        elif type(struct) == numpy.ndarray:
-            content = _browse_dataset(struct[0], hdf5_file)
-    elif type(struct) == h5py.h5r.Reference:
-        content = hdf5_file[struct].value.T
+        if variable_names:
+            all_keys = all_keys & set(variable_names)
+
+        return_dict = dict()
+
+        for key in all_keys:
+            return_dict[key] = _hdf5todict(hdf5_object[key], variable_names=None, ignore_fields=ignore_fields)
+
+        return return_dict
+    elif isinstance(hdf5_object, h5py.Dataset):
+        data = hdf5_object.value
+        if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object'):
+            data = [hdf5_object.file[cur_data[0]] for cur_data in data]
+            data = _hdf5todict(data)
+
+        return _assign_types(data)
+    elif isinstance(hdf5_object, list):
+        return [_hdf5todict(item) for item in hdf5_object]
     else:
-        content = struct
-    return _assign_types(content)
+        raise TypeError('Unknown type in hdf5 file')
 
 
 def _assign_types(values):
     """private function, which assigns correct types to h5py extracted values from _browse_dataset()"""
 
     if type(values) == numpy.ndarray:
-        values = numpy.squeeze(values)
+        values = numpy.squeeze(values).T
         if values.dtype in ("uint8", "uint16", "uint32"):
             if values.size > 1:
                 assigned_values = u''.join(chr(c) for c in values)
