@@ -22,6 +22,7 @@ from builtins import chr  # This is needed for python 2 and 3 compatibility
 import h5py
 import numpy
 import scipy.io
+import types
 
 __all__ = 'read_mat'
 
@@ -39,7 +40,7 @@ def read_mat(filename, variable_names=None, ignore_fields=None):
     ----------
     filename: str
         Path and filename of the .mat file containing the data.
-    variable_names: str, optional
+    variable_names: list of strings, optional
         Reads only the data contained in the specified dict key or variable name. Default is None.
     ignore_fields: list of strings, optional
         Ignores every dict key/variable name specified in the list within the entire structure. Only works for .mat files
@@ -101,11 +102,11 @@ def _hdf5todict(hdf5_object, variable_names=None, ignore_fields=None):
     elif isinstance(hdf5_object, h5py.Dataset):
         data = hdf5_object.value
         if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object'):
-            data = [hdf5_object.file[cur_data[0]] for cur_data in data]
+            data = [hdf5_object.file[cur_data] for cur_data in data.flatten()]
             data = _hdf5todict(data)
 
         return _assign_types(data)
-    elif isinstance(hdf5_object, list):
+    elif isinstance(hdf5_object, (list, types.GeneratorType)):
         return [_hdf5todict(item) for item in hdf5_object]
     else:
         raise TypeError('Unknown type in hdf5 file')
@@ -123,6 +124,10 @@ def _assign_types(values):
                 assigned_values = chr(values)
         else:
             assigned_values = values
+
+        if isinstance(assigned_values, numpy.ndarray) and assigned_values.size == 1:
+            assigned_values = assigned_values.item()
+
     elif type(values) == numpy.float64:
         assigned_values = float(values)
     else:
@@ -148,11 +153,14 @@ def _check_for_scipy_mat_struct(data):
         for key in data:
             data[key] = _check_for_scipy_mat_struct(data[key])
 
-    if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object'):
+    if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object') and not isinstance(data, scipy.io.matlab.mio5.MatlabFunction):
         as_list = data.tolist()
-        for (element, list_element) in zip(numpy.nditer(data, flags=['refs_ok'], op_flags=['readwrite']), as_list):
-            if not (isinstance(list_element, numpy.ndarray) and not list_element.dtype == numpy.dtype('object')):
-                element[...] = _check_for_scipy_mat_struct(list_element)
+        try:
+            for (element, list_element) in zip(numpy.nditer(data, flags=['refs_ok'], op_flags=['readwrite']), as_list):
+                if not (isinstance(list_element, numpy.ndarray) and not list_element.dtype == numpy.dtype('object')):
+                    element[...] = _check_for_scipy_mat_struct(list_element)
+        except TypeError:
+            pass
 
     if isinstance(data, scipy.io.matlab.mio5_params.mat_struct):
         data = _todict(data)
