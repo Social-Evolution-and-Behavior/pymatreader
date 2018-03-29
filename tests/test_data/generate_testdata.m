@@ -50,6 +50,14 @@ for idx_cells = 1:100
   a_struct.a_cell_array{idx_cells} = rand(2, 5);
 end %for
 clear idx_cells
+a_struct.a_cell_struct_array = {};
+for idx_cells = 1:5
+  a_struct.a_cell_struct_array{idx_cells}.int = randi(255, 1);
+  a_struct.a_cell_struct_array{idx_cells}.float = rand(1);
+  a_struct.a_cell_struct_array{idx_cells}.matrix = rand(100, 100);
+  a_struct.a_cell_struct_array{idx_cells}.string = random_string(20);
+end %for
+clear idx_cells
 
 a_struct.second_level.string = random_string(20);
 a_struct.second_level.int = randi(255, 1);
