@@ -55,7 +55,7 @@ def read_mat(filename, variable_names=None, ignore_fields=None):
         ignore_fields = []
     try:
         hdf5_file = scipy.io.loadmat(filename, struct_as_record=False, squeeze_me=True, variable_names=variable_names)
-        data = _check_keys(hdf5_file)
+        data = _check_for_scipy_mat_struct(hdf5_file)
         print("finished loading .mat file <v7.3")
     except NotImplementedError:
         hdf5_file = h5py.File(filename, "r")
@@ -120,15 +120,35 @@ def _assign_types(values):
     return assigned_values
 
 
-def _check_keys(data_dict):
-    """private function to enhance scipy.io.loadmat. Checks if entries in dictionary are mat-objects.
-    If yes _todict is called to change them to nested dictionaries. Idea taken from:
-    <stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries>"""
+def _check_for_scipy_mat_struct(data):
+    """
+    Private function to check all entries of data for occurrences of scipy.io.matlab.mio5_params.mat_struct and convert them.
 
-    for key in data_dict:
-        if isinstance(data_dict[key], scipy.io.matlab.mio5_params.mat_struct):
-            data_dict[key] = _todict(data_dict[key])
-    return data_dict
+    Parameters
+    ==========
+    data: any
+        data to be checked
+
+    Returns
+    =========
+    object
+        checked and converted data
+    """
+    if isinstance(data, dict):
+        for key in data:
+            data[key] = _check_for_scipy_mat_struct(data[key])
+
+    if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object'):
+        as_list = data.tolist()
+        for (element, list_element) in zip(numpy.nditer(data, flags=['refs_ok'], op_flags=['readwrite']), as_list):
+            if not (isinstance(list_element, numpy.ndarray) and not list_element.dtype == numpy.dtype('object')):
+                element[...] = _check_for_scipy_mat_struct(list_element)
+
+    if isinstance(data, scipy.io.matlab.mio5_params.mat_struct):
+        data = _todict(data)
+        data = _check_for_scipy_mat_struct(data)
+
+    return data
 
 
 def _todict(matobj):
