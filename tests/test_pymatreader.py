@@ -29,6 +29,8 @@ testdata_v6_fname = 'v6.mat'
 testdata_v7_fname = 'v7.mat'
 testdata_v73_fname = 'v73.mat'
 testdata_xml = 'xmldata.xml'
+testdata_ft_v7_fname = 'ft_v7.mat'
+testdata_ft_v73_fname = 'ft_v73.mat'
 
 
 def test_v6v7():
@@ -57,3 +59,9 @@ def test_xmlv7():
     xml_data = read_xml_data(os.path.join(test_data_folder, testdata_xml))
 
     assertDeepAlmostEqual(v7_data, xml_data)
+
+def test_ft_v7v73():
+    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_ft_v7_fname), variable_names=('data_epoched', )))
+    v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_ft_v73_fname), variable_names=('data_epoched', )))
+
+    assertDeepAlmostEqual(v7_data, v73_data)

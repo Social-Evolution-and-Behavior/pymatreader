@@ -22,6 +22,7 @@ import numpy
 import xmltodict
 from nose.tools import assert_almost_equal, assert_equal
 from six import string_types
+import types
 
 
 def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
@@ -42,7 +43,11 @@ def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
     try:
         if isinstance(expected, (int, float, complex)):
             assert_almost_equal(expected, actual, *args, **kwargs)
-        elif isinstance(expected, (list, tuple, numpy.ndarray)):
+        elif isinstance(expected, (list, tuple, numpy.ndarray, types.GeneratorType)):
+            if isinstance(expected, types.GeneratorType):
+                expected = list(expected)
+                actual = list(actual)
+
             assert_equal(len(expected), len(actual))
             for index in range(len(expected)):
                 v1, v2 = expected[index], actual[index]
@@ -59,7 +64,12 @@ def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
         exc.__dict__.setdefault('traces', []).append(trace)
         if is_root:
             trace = ' -> '.join(reversed(exc.traces))
-            exc = AssertionError("%s\nTRACE: %s" % (exc.message, trace))
+            message = ''
+            try:
+                message = exc.message
+            except AttributeError:
+                pass
+            exc = AssertionError("%s\nTRACE: %s" % (message, trace))
         raise exc
 
 
