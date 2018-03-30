@@ -7,32 +7,24 @@ package:
   version: '{{ version }}'
 
 source:
-  #fn: '{{ name }}-{{ version }}.{{ file_ext }}'
-  #url: ../dist/{{ name }}-{{ version }}.{{ file_ext }}
   path: ../
 
 build:
   number: 0
   script: python setup.py install --single-version-externally-managed --record=record.txt
+  include_recipe: False
+  noarch: python
 
 requirements:
-  #host:
-  #  - python
-  #  - setuptools
-  #  - h5py
-  #  - scipy
-  #  - numpy
-  #  - xmltodict
-  #  - future
   run:
-    - python {{ python }}
+    - python
     - h5py
     - scipy
     - numpy
     - xmltodict
     - future
   build:
-    - python {{ python }}
+    - python
 
 test:
   imports:
