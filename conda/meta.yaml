@@ -1,0 +1,59 @@
+{% set name = "pymatreader" %}
+{% set version = "0.0.3" %}
+{% set file_ext = "tar.gz" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  #fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  #url: ../dist/{{ name }}-{{ version }}.{{ file_ext }}
+  path: ../
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  host:
+    - python
+    - setuptools
+    - h5py
+    - scipy
+    - numpy
+    - xmltodict
+    - future
+  run:
+    - python
+    - h5py
+    - scipy
+    - numpy
+    - xmltodict
+    - future
+
+test:
+  imports:
+    - pymatreader
+  source_files:
+    - tests
+  requires:
+    - nose
+  commands:
+    - nosetests tests
+
+about:
+  home: https://gitlab.com/obob/pymatreader
+  license: GNU General Public License v3 or later (GPLv3+)
+  license_family: GPL3
+  license_file: ''
+  summary: Convenient reader for Matlab mat files
+  description: "# pymatreader\nA Python module to read Matlab files. This module works with both the old (< 7.3) and the new (>= 7.3) HDF5 based format. The output should be the same for both kinds of files.\n\
+    \n## How to use\n```python\nfrom pymatreader import read_mat\n\ndata = read_mat(filename)\n```\n\n`data` is a python `dict` containing all variables of the mat file.\n\n## Documentation\nDocumentation\
+    \ can be found here: <http://pymatreader.readthedocs.io/en/latest/>\n\n## Code\nThe source code can be found here: <https://gitlab.com/obob/pymatreader>\n\n## License\nThis module is developed by Dirk\
+    \ G\xFCtlin & Thomas Hartmann at the Universit\xE4t Salzburg. You are free to use, copy, modify, distribute it under the terms of the GPL3."
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
