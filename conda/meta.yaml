@@ -1,5 +1,5 @@
 {% set name = "pymatreader" %}
-{% set version = "0.0.3" %}
+{% set version = load_setup_py_data().version %}
 {% set file_ext = "tar.gz" %}
 
 package:
@@ -16,21 +16,23 @@ build:
   script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
-  host:
-    - python
-    - setuptools
-    - h5py
-    - scipy
-    - numpy
-    - xmltodict
-    - future
+  #host:
+  #  - python
+  #  - setuptools
+  #  - h5py
+  #  - scipy
+  #  - numpy
+  #  - xmltodict
+  #  - future
   run:
-    - python
+    - python {{ python }}
     - h5py
     - scipy
     - numpy
     - xmltodict
     - future
+  build:
+    - python {{ python }}
 
 test:
   imports:
