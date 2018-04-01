@@ -1,6 +1,7 @@
-{% set name = "pymatreader" %}
-{% set version = load_setup_py_data().version %}
-{% set file_ext = "tar.gz" %}
+{% set data = load_setup_py_data() %}
+
+{% set name = 'pymatreader' %}
+{% set version = data.version %}
 
 package:
   name: '{{ name|lower }}'
@@ -28,7 +29,7 @@ requirements:
 
 test:
   imports:
-    - pymatreader
+    - {{ name }}
   source_files:
     - tests
   requires:
@@ -37,12 +38,12 @@ test:
     - nosetests tests
 
 about:
-  home: https://gitlab.com/obob/pymatreader
-  license: GNU General Public License v3 or later (GPLv3+)
+  home: {{ data.url }}
+  license: {{ data.license }}
   license_family: GPL3
   license_file: ''
-  summary: Convenient reader for Matlab mat files
-  description: '{{ load_setup_py_data().long_description }}'
+  summary: {{ data.description }}
+  description: '{{ data.long_description }}'
   doc_url: ''
   dev_url: ''
 
