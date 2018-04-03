@@ -103,7 +103,7 @@ def _hdf5todict(hdf5_object, variable_names=None, ignore_fields=None):
         data = hdf5_object.value
         if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object'):
             data = [hdf5_object.file[cur_data] for cur_data in data.flatten()]
-            data = _hdf5todict(data)
+            data = numpy.squeeze(_hdf5todict(data)).T
 
         return _assign_types(data)
     elif isinstance(hdf5_object, (list, types.GeneratorType)):
