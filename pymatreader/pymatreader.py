@@ -166,6 +166,10 @@ def _check_for_scipy_mat_struct(data):
         data = _todict(data)
         data = _check_for_scipy_mat_struct(data)
 
+    # this is needed to unnest nested arrays
+    if isinstance(data, numpy.ndarray):
+        data = numpy.array(data.tolist())
+
     return data
 
 
