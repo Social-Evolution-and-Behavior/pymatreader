@@ -28,7 +28,7 @@ setup(
     version=version,
     packages=['pymatreader'],
     url='https://gitlab.com/obob/pymatreader',
-    license='GPL3',
+    license='BSD (2 clause)',
     author='Dirk Gütlin & Thomas Hartmann',
     author_email='thomas.hartmann@th-ht.de',
     description='Convenient reader for Matlab mat files',
@@ -38,7 +38,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
     ],

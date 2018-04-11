@@ -40,7 +40,7 @@ test:
 about:
   home: {{ data.url }}
   license: {{ data.license }}
-  license_family: GPL3
+  license_family: BSD
   license_file: ''
   summary: {{ data.description }}
   description: '{{ data.long_description }}'
