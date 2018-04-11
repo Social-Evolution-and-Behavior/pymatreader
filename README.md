@@ -17,4 +17,4 @@ Documentation can be found here: <http://pymatreader.readthedocs.io/en/latest/>
 The source code can be found here: <https://gitlab.com/obob/pymatreader>
 
 ## License
-This module is developed by Dirk Gütlin & Thomas Hartmann at the Universität Salzburg. You are free to use, copy, modify, distribute it under the terms of the GPL3.
+This module is developed by Dirk Gütlin & Thomas Hartmann at the Universität Salzburg. You are free to use, copy, modify, distribute it under the terms of the BSD 2 clause license.
