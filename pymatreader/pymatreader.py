@@ -32,6 +32,7 @@ import h5py
 import numpy
 import scipy.io
 import types
+import os
 
 __all__ = 'read_mat'
 
@@ -60,6 +61,9 @@ def read_mat(filename, variable_names=None, ignore_fields=None):
     dict
         A structure of nested dictionaries, with variable names as keys and variable data as values.
     """
+
+    if not os.path.exists(filename):
+        raise IOError('The file %s does not exist.' % (filename, ))
 
     if ignore_fields is None:
         ignore_fields = []

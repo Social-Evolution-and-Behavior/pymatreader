@@ -30,6 +30,7 @@ from unittest import TestCase
 
 from pymatreader import read_mat
 from .helper_functions import assertDeepAlmostEqual, sanitize_dict, read_xml_data
+from nose.tools import raises
 
 TestCase.maxDiff = None
 
@@ -40,6 +41,7 @@ testdata_v73_fname = 'v73.mat'
 testdata_xml = 'xmldata.xml'
 testdata_ft_v7_fname = 'ft_v7.mat'
 testdata_ft_v73_fname = 'ft_v73.mat'
+invalid_fname = 'invalid.mat'
 
 
 def test_v6v7():
@@ -74,3 +76,7 @@ def test_ft_v7v73():
     v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_ft_v73_fname), variable_names=('data_epoched', )))
 
     assertDeepAlmostEqual(v7_data, v73_data)
+
+@raises(IOError)
+def test_file_does_not_exist():
+    read_mat(os.path.join(test_data_folder, invalid_fname))
