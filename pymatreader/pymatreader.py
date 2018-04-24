@@ -26,7 +26,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-from builtins import chr  # This is needed for python 2 and 3 compatibility
+import sys
+if sys.version_info <= (2, 7):
+    chr = unichr # This is needed for python 2 and 3 compatibility
 
 import h5py
 import numpy
