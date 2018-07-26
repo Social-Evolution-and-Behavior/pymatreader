@@ -30,7 +30,6 @@ import sys
 if sys.version_info <= (2, 7):
     chr = unichr # This is needed for python 2 and 3 compatibility
 
-import h5py
 import numpy
 import scipy.io
 import types
@@ -76,12 +75,14 @@ def read_mat(filename, variable_names=None, ignore_fields=None, uint16_codec=Non
     if ignore_fields is None:
         ignore_fields = []
     try:
-        hdf5_file = scipy.io.loadmat(filename, struct_as_record=False,
-                                     squeeze_me=True,
-                                     variable_names=variable_names, uint16_codec=uint16_codec)
+        with open(filename, 'rb') as fid:  # avoid open file warnings on error
+            hdf5_file = scipy.io.loadmat(fid, struct_as_record=False,
+                                         squeeze_me=True,
+                                         variable_names=variable_names, uint16_codec=uint16_codec)
         data = _check_for_scipy_mat_struct(hdf5_file)
     except NotImplementedError:
         ignore_fields.append('#refs#')
+        import h5py
         with h5py.File(filename, 'r') as hdf5_file:
             data = _hdf5todict(hdf5_file, variable_names=variable_names, ignore_fields=ignore_fields)
     return data
@@ -106,6 +107,7 @@ def _hdf5todict(hdf5_object, variable_names=None, ignore_fields=None):
     dict
         Python dictionary
     """
+    import h5py
     if isinstance(hdf5_object, h5py.Group):
         all_keys = set(hdf5_object.keys())
         if ignore_fields:
