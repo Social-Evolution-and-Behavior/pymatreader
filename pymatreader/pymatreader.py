@@ -30,9 +30,9 @@ import sys
 if sys.version_info <= (2, 7):
     chr = unichr # This is needed for python 2 and 3 compatibility
 
+import h5py
 import numpy
 import scipy.io
-import h5py
 import types
 import os
 
