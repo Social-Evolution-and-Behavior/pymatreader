@@ -30,7 +30,6 @@ import sys
 if sys.version_info <= (2, 7):
     chr = unichr # This is needed for python 2 and 3 compatibility
 
-import h5py
 import numpy
 import scipy.io
 import types
@@ -42,6 +41,15 @@ __all__ = 'read_mat'
 This is a small module intended to facilitate reading .mat files containing large data structures into python,
 disregarding of the underlying .mat file version.
 """
+
+
+def _import_h5py():
+    try:
+        import h5py
+    except Exception as exc:
+        raise ImportError('h5py is required to read MATLAB files >= v7.3 '
+                          '(%s)' % (exc,))
+    return h5py
 
 
 def read_mat(filename, variable_names=None, ignore_fields=None, uint16_codec=None):
@@ -83,6 +91,7 @@ def read_mat(filename, variable_names=None, ignore_fields=None, uint16_codec=Non
         data = _check_for_scipy_mat_struct(hdf5_file)
     except NotImplementedError:
         ignore_fields.append('#refs#')
+        h5py = _import_h5py()
         with h5py.File(filename, 'r') as hdf5_file:
             data = _hdf5todict(hdf5_file, variable_names=variable_names, ignore_fields=ignore_fields)
     return data
@@ -107,6 +116,9 @@ def _hdf5todict(hdf5_object, variable_names=None, ignore_fields=None):
     dict
         Python dictionary
     """
+
+    h5py = _import_h5py()
+
     if isinstance(hdf5_object, h5py.Group):
         all_keys = set(hdf5_object.keys())
         if ignore_fields:
