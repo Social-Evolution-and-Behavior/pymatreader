@@ -193,12 +193,15 @@ def _check_for_scipy_mat_struct(data):
         as_list = []
         for element in data:
             as_list.append(_check_for_scipy_mat_struct(element))
-        data = numpy.array(as_list)
+        data = as_list
 
     if isinstance(data, scipy.io.matlab.mio5_params.mat_struct):
         data = _todict(data)
         data = _check_for_scipy_mat_struct(data)
 
+    if isinstance(data, numpy.ndarray):
+        data = numpy.array(data)
+        
     return data
 
 
