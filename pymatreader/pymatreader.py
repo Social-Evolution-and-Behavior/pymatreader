@@ -190,22 +190,18 @@ def _check_for_scipy_mat_struct(data):
             data[key] = _check_for_scipy_mat_struct(data[key])
 
     if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object') and not isinstance(data, scipy.io.matlab.mio5.MatlabFunction):
-        as_list = data.tolist()
-        try:
-            for (element, list_element) in zip(numpy.nditer(data, flags=['refs_ok'], op_flags=['readwrite']), as_list):
-                if not (isinstance(list_element, numpy.ndarray) and not list_element.dtype == numpy.dtype('object')):
-                    element[...] = _check_for_scipy_mat_struct(list_element)
-        except TypeError:
-            pass
+        as_list = []
+        for element in data:
+            as_list.append(_check_for_scipy_mat_struct(element))
+        data = as_list
 
     if isinstance(data, scipy.io.matlab.mio5_params.mat_struct):
         data = _todict(data)
         data = _check_for_scipy_mat_struct(data)
 
-    # this is needed to unnest nested arrays
     if isinstance(data, numpy.ndarray):
-        data = numpy.array(data.tolist())
-
+        data = numpy.array(data)
+        
     return data
 
 

@@ -49,6 +49,15 @@ for idx_cells = 1:100
   a_cell_array{idx_cells} = rand(2, 5);
 end %for
 clear idx_cells
+a_second_cell_array = {};
+for idx_cells = 1:100
+  a_second_cell_array{idx_cells} = rand(2, 5);
+end %for
+clear idx_cells
+
+a_heading_cell_array = cell(1,1);
+a_heading_cell_array{1} = a_cell_array;
+a_heading_cell_array{2} = a_second_cell_array;
 
 a_struct = {};
 a_struct.string = random_string(20);

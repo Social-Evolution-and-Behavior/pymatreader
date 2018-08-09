@@ -28,6 +28,6 @@ function str = random_string(length)
 % OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 % OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-str = char(floor(94*rand(1, length)) + 32);
+str = strtrim(char(floor(94*rand(1, length)) + 32));
 end
 
