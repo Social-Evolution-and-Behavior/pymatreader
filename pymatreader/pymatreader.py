@@ -189,13 +189,15 @@ def _check_for_scipy_mat_struct(data):
         for key in data:
             data[key] = _check_for_scipy_mat_struct(data[key])
 
+    if isinstance(data, numpy.ndarray) and data.dtype == numpy.dtype('object') and not isinstance(data, scipy.io.matlab.mio5.MatlabFunction):
+        as_list = []
+        for element in data:
+            as_list.append(_check_for_scipy_mat_struct(element))
+        data = numpy.array(as_list)
+
     if isinstance(data, scipy.io.matlab.mio5_params.mat_struct):
         data = _todict(data)
         data = _check_for_scipy_mat_struct(data)
-
-    # this is needed to unnest nested arrays
-    if isinstance(data, numpy.ndarray):
-        data = _tolist(data)
 
     return data
 
@@ -210,23 +212,6 @@ def _todict(matobj):
         elem = matobj.__dict__[strg]
         if isinstance(elem, scipy.io.matlab.mio5_params.mat_struct):
             data_dict[strg] = _todict(elem)
-        elif isinstance(elem, numpy.ndarray):
-            data_dict[strg] = _tolist(elem)
         else:
             data_dict[strg] = elem
     return data_dict
-
-
-def _tolist(ndarray):
-    """private function to enhance scipy.io.loadmat.
-    A recursive function which is able to handle the scipy.io.loadmat problems with nested cell arrays.
-    Idea taken from: <stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries>"""
-    elem_list = []
-    for sub_elem in ndarray:
-        if isinstance(sub_elem, scipy.io.matlab.mio5_params.mat_struct):
-            elem_list.append(_todict(sub_elem))
-        elif isinstance(sub_elem, numpy.ndarray):
-            elem_list.append(_tolist(sub_elem))
-        else:
-            elem_list.append(sub_elem)
-    return elem_list
