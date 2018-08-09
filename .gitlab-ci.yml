@@ -13,3 +13,19 @@ test_35:
 test_27:
   image: python:2.7
   script: sh gitlab-ci-test.sh
+
+test_miniconda3:
+  image: continuumio/miniconda3
+  script:
+    - conda install conda-build conda-verify
+    - conda config --add channels obob
+    - conda config --add channels conda-forge
+    - conda build .
+
+test_miniconda2:
+  image: continuumio/miniconda
+  script:
+    - conda install conda-build conda-verify
+    - conda config --add channels obob
+    - conda config --add channels conda-forge
+    - conda build .
