@@ -29,3 +29,9 @@ test_miniconda2:
     - conda config --add channels obob
     - conda config --add channels conda-forge
     - conda build .
+
+test_flake:
+  image: python:3
+  script:
+    - pip install -U -r requirements.txt
+    - make flake

@@ -42,6 +42,11 @@ testdata_xml = 'xmldata.xml'
 testdata_ft_v7_fname = 'ft_v7.mat'
 testdata_ft_v73_fname = 'ft_v73.mat'
 testdata_eeglab_h5 = 'test_raw_h5.set'
+testdata_eeglab_old = 'test_raw.set'
+testdata_cell_struct_v6 = 'cell_struct_v6.mat'
+testdata_cell_struct_v7 = 'cell_struct_v7.mat'
+testdata_cell_struct_v73 = 'cell_struct_v73.mat'
+
 invalid_fname = 'invalid.mat'
 
 
@@ -78,8 +83,55 @@ def test_ft_v7v73():
 
     assertDeepAlmostEqual(v7_data, v73_data)
 
+def test_cell_struct_v6v7():
+    v6_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_cell_struct_v6)))
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_cell_struct_v7)))
+
+    assertDeepAlmostEqual(v6_data, v7_data)
+
+def test_cell_struct_v7v73():
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_cell_struct_v7)))
+    v73_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_cell_struct_v73)))
+
+    assertDeepAlmostEqual(v7_data, v73_data)
+
+def test_eeglab_v7v73():
+    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_eeglab_old)))
+
+    v73_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_eeglab_h5)))
+
+    assertDeepAlmostEqual(v7_data, v73_data)
+
 def test_raw_h5_eeglab():
     data = read_mat(os.path.join(test_data_folder, testdata_eeglab_h5))
+
+def test_raw_old_eeglab():
+    data = read_mat(os.path.join(test_data_folder, testdata_eeglab_old))
+
+def test_raw_h5_eeglab_event_type():
+    data = read_mat(os.path.join(test_data_folder, testdata_eeglab_h5))
+    from .helper_functions.mne_eeglab_stuff import prepare_events_like_mne
+
+    events = prepare_events_like_mne(data)
+
+    first_event = events[0]
+    first_event.type
+    first_event.latency
+
+def test_raw_old_eeglab_event_type():
+    data = read_mat(os.path.join(test_data_folder, testdata_eeglab_old))
+    from .helper_functions.mne_eeglab_stuff import prepare_events_like_mne
+
+    events = prepare_events_like_mne(data)
+    first_event = events[0]
+    first_event.type
+    first_event.latency
+
 
 @raises(IOError)
 def test_file_does_not_exist():
