@@ -11,3 +11,4 @@ future
 twine
 wheel
 coverage
+flake8

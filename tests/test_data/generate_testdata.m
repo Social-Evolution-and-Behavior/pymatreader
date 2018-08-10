@@ -44,6 +44,10 @@ a_second_float = rand(1);
 
 a_matrix = rand(100, 100);
 
+a_single_char = 'b';
+
+an_empty_string = '';
+
 a_cell_array = {};
 for idx_cells = 1:100
   a_cell_array{idx_cells} = rand(2, 5);
@@ -94,3 +98,24 @@ save('v73.mat', '-v7.3')
 
 test_data.for_xml = load('v73.mat');
 xml_write('xmldata.xml', test_data);
+
+%% generate testdata for struct arrays vs. cell arrays...
+clear all global
+
+for idx = 1:5
+  a_struct_array(idx).string = random_string(20);
+  a_struct_array(idx).int = randi(255, 1);
+  a_struct_array(idx).float = rand(1);
+  a_struct_array(idx).matrix = rand(100, 100);
+  
+  a_cell_array{idx}.string = random_string(20);
+  a_cell_array{idx}.int = randi(255, 1);
+  a_cell_array{idx}.float = rand(1);
+  a_cell_array{idx}.matrix = rand(100, 100);
+end %for
+
+clear idx
+
+save('cell_struct_v6.mat', '-v6')
+save('cell_struct_v7.mat', '-v7')
+save('cell_struct_v73.mat', '-v7.3')

@@ -49,6 +49,13 @@ def assertDeepAlmostEqual(expected, actual, *args, **kwargs):
     """
     is_root = not '__trace' in kwargs
     trace = kwargs.pop('__trace', 'ROOT')
+
+    if isinstance(expected, numpy.ndarray) and expected.size == 0:
+        expected = None
+
+    if isinstance(actual, numpy.ndarray) and actual.size == 0:
+        actual = None
+
     try:
         if isinstance(expected, (int, float, complex)):
             assert_almost_equal(expected, actual, *args, **kwargs)
