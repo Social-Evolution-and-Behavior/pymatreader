@@ -12,3 +12,4 @@ twine
 wheel
 coverage
 flake8
+codecov
