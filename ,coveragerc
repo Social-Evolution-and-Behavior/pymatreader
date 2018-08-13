@@ -1,0 +1,5 @@
+[run]
+branch = True
+source = pymatreader
+include = */pymatreader/*
+omit = */tests/*
