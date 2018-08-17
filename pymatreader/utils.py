@@ -109,17 +109,12 @@ def _handle_hdf5_dataset(hdf5_object):
 
         data = [hdf5_object.file[cur_data] for cur_data in data.flatten()]
         data = _hdf5todict(data)
-        if isinstance(data, numpy.ndarray):
-            data = numpy.squeeze(data).T
 
     return _assign_types(data)
 
 
 def _convert_string_hdf5(values):
-    if values.size == 2 and numpy.all(
-            values == [0, 0]):  # this is most probably the empty string
-        assigned_values = u''
-    elif values.size > 1:
+    if values.size > 1:
         assigned_values = u''.join(chr(c) for c in values.flatten())
     else:
         assigned_values = chr(values)
