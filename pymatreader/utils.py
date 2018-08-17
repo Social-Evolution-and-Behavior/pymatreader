@@ -76,8 +76,8 @@ def _hdf5todict(hdf5_object, variable_names=None, ignore_fields=None):
         return _handle_hdf5_dataset(hdf5_object)
     elif isinstance(hdf5_object, (list, types.GeneratorType)):
         return [_hdf5todict(item) for item in hdf5_object]
-    else:
-        raise TypeError('Unknown type in hdf5 file')
+
+    raise TypeError('Unknown type in hdf5 file')
 
 
 def _handle_hdf5_group(hdf5_object, variable_names=None, ignore_fields=None):
@@ -113,6 +113,7 @@ def _handle_hdf5_dataset(hdf5_object):
             data = numpy.squeeze(data).T
 
     return _assign_types(data)
+
 
 def _convert_string_hdf5(values):
     if values.size == 2 and numpy.all(
