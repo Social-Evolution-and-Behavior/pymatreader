@@ -121,32 +121,40 @@ def _convert_string_hdf5(values):
 def _assign_types(values):
     """private function, which assigns correct types to h5py extracted values
     from _browse_dataset()"""
-
     if type(values) == numpy.ndarray:
-        values = numpy.squeeze(values).T
-        if values.dtype in ("uint8", "uint16", "uint32", "uint64"):
-            if values.ndim in (0, 1):
-                assigned_values = _convert_string_hdf5(values)
-            elif values.ndim == 2:
-                assigned_values = [_convert_string_hdf5(cur_val)
-                                   for cur_val in values]
-            else:
-                raise RuntimeError('String arrays with more than 2 dimensions'
-                                   'are not supported at the moment.')
-        else:
-            assigned_values = values
-
-        if isinstance(assigned_values, numpy.ndarray) and \
-                assigned_values.size == 1:
-
-            assigned_values = assigned_values.item()
-
+        assigned_values = _handle_ndarray(values)
     elif type(values) == numpy.float64:
         assigned_values = float(values)
     else:
         assigned_values = values
     return assigned_values
 
+
+def _handle_ndarray(values):
+    """Handle conversion of ndarrays."""
+    values = numpy.squeeze(values).T
+    if values.dtype in ("uint8", "uint16", "uint32", "uint64"):
+        values = _handle_hdf5_strings(values)
+
+    if isinstance(values, numpy.ndarray) and \
+            values.size == 1:
+
+        values = values.item()
+
+    return values
+
+
+def _handle_hdf5_strings(values):
+    if values.ndim in (0, 1):
+        values = _convert_string_hdf5(values)
+    elif values.ndim == 2:
+        values = [_convert_string_hdf5(cur_val)
+                           for cur_val in values]
+    else:
+        raise RuntimeError('String arrays with more than 2 dimensions'
+                           'are not supported at the moment.')
+
+    return values
 
 def _check_for_scipy_mat_struct(data):
     """
