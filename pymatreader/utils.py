@@ -69,41 +69,50 @@ def _hdf5todict(hdf5_object, variable_names=None, ignore_fields=None):
     h5py = _import_h5py()
 
     if isinstance(hdf5_object, h5py.Group):
-        all_keys = set(hdf5_object.keys())
-        if ignore_fields:
-            all_keys = all_keys - set(ignore_fields)
+        return _handle_hdf5_group(hdf5_object, variable_names=variable_names,
+                                  ignore_fields=ignore_fields)
 
-        if variable_names:
-            all_keys = all_keys & set(variable_names)
-
-        return_dict = dict()
-
-        for key in all_keys:
-            return_dict[key] = _hdf5todict(hdf5_object[key],
-                                           variable_names=None,
-                                           ignore_fields=ignore_fields)
-
-        return return_dict
     elif isinstance(hdf5_object, h5py.Dataset):
-        if 'MATLAB_empty' in hdf5_object.attrs.keys():
-            data = numpy.empty((0,))
-        else:
-            data = hdf5_object.value
-
-        if isinstance(data, numpy.ndarray) and \
-                data.dtype == numpy.dtype('object'):
-
-            data = [hdf5_object.file[cur_data] for cur_data in data.flatten()]
-            data = _hdf5todict(data)
-            if isinstance(data, numpy.ndarray):
-                data = numpy.squeeze(data).T
-
-        return _assign_types(data)
+        return _handle_hdf5_dataset(hdf5_object)
     elif isinstance(hdf5_object, (list, types.GeneratorType)):
         return [_hdf5todict(item) for item in hdf5_object]
     else:
         raise TypeError('Unknown type in hdf5 file')
 
+
+def _handle_hdf5_group(hdf5_object, variable_names=None, ignore_fields=None):
+    all_keys = set(hdf5_object.keys())
+    if ignore_fields:
+        all_keys = all_keys - set(ignore_fields)
+
+    if variable_names:
+        all_keys = all_keys & set(variable_names)
+
+    return_dict = dict()
+
+    for key in all_keys:
+        return_dict[key] = _hdf5todict(hdf5_object[key],
+                                       variable_names=None,
+                                       ignore_fields=ignore_fields)
+
+    return return_dict
+
+
+def _handle_hdf5_dataset(hdf5_object):
+    if 'MATLAB_empty' in hdf5_object.attrs.keys():
+        data = numpy.empty((0,))
+    else:
+        data = hdf5_object.value
+
+    if isinstance(data, numpy.ndarray) and \
+            data.dtype == numpy.dtype('object'):
+
+        data = [hdf5_object.file[cur_data] for cur_data in data.flatten()]
+        data = _hdf5todict(data)
+        if isinstance(data, numpy.ndarray):
+            data = numpy.squeeze(data).T
+
+    return _assign_types(data)
 
 def _convert_string_hdf5(values):
     if values.size == 2 and numpy.all(
