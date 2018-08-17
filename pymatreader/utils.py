@@ -175,16 +175,20 @@ def _check_for_scipy_mat_struct(data):
         for key in data:
             data[key] = _check_for_scipy_mat_struct(data[key])
 
-    if isinstance(data, numpy.ndarray) and \
-            data.dtype == numpy.dtype('object') and not \
-            isinstance(data, scipy.io.matlab.mio5.MatlabFunction):
+    if isinstance(data, numpy.ndarray):
+        data = _handle_scipy_ndarray(data)
 
+    return data
+
+
+def _handle_scipy_ndarray(data):
+    if data.dtype == numpy.dtype('object') and not \
+            isinstance(data, scipy.io.matlab.mio5.MatlabFunction):
         as_list = []
         for element in data:
             as_list.append(_check_for_scipy_mat_struct(element))
         data = as_list
-
-    if isinstance(data, numpy.ndarray) and isinstance(data.dtype.names, tuple):
+    elif isinstance(data.dtype.names, tuple):
         data = _todict_from_np_struct(data)
         data = _check_for_scipy_mat_struct(data)
 
