@@ -31,7 +31,6 @@ import sys
 import numpy
 import scipy.io
 
-
 if sys.version_info <= (2, 7):
     chr = unichr  # noqa This is needed for python 2 and 3 compatibility
 
@@ -149,12 +148,13 @@ def _handle_hdf5_strings(values):
         values = _convert_string_hdf5(values)
     elif values.ndim == 2:
         values = [_convert_string_hdf5(cur_val)
-                           for cur_val in values]
+                  for cur_val in values]
     else:
         raise RuntimeError('String arrays with more than 2 dimensions'
                            'are not supported at the moment.')
 
     return values
+
 
 def _check_for_scipy_mat_struct(data):
     """
