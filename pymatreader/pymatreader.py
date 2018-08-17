@@ -91,5 +91,3 @@ def read_mat(filename, variable_names=None, ignore_fields=None,
             data = _hdf5todict(hdf5_file, variable_names=variable_names,
                                ignore_fields=ignore_fields)
     return data
-
-
