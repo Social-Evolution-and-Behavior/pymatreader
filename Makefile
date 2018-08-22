@@ -55,6 +55,6 @@ make-dist: $(pypidist) $(condadist)
 
 upload-dist: make-dist
 ifeq ($(ISDEV), 0)
-    anaconda upload --force $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
+	anaconda upload --force $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
 endif
 	twine upload dist/pymatreader-$(PYPIVERSION).tar.gz
