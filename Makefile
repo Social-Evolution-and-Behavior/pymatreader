@@ -3,7 +3,17 @@
 # caution: testing won't work on windows, see README
 
 VERSION_FILE:=VERSION
-VERSION:=$(shell cat ${VERSION_FILE})
+VERSION:=$(strip $(shell cat ${VERSION_FILE}))
+PYPIVERSION:=$(subst _,.,$(VERSION))
+pypidist:=dist/pymatreader-$(PYPIVERSION).tar.gz
+condadist:=$(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
+
+ifeq ($(findstring dev,$(VERSION)), dev)
+	export TWINE_REPOSITORY_URL=https://test.pypi.org/legacy/
+	ifeq ($(shell echo -n $(PYPIVERSION) | tail -c 1), v)
+		PYPIVERSION:=$(PYPIVERSION)0
+	endif
+endif
 
 flake:
 	@if command -v flake8 > /dev/null; then \
@@ -31,8 +41,17 @@ clean-dist:
 	rm -rf dist
 	rm -rf pymatreader.egg-info
 
-upload-dist: clean-dist
-	python setup.py sdist
+$(pypidist):
+
+$(condadist):
 	conda build .
-	anaconda upload $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
-	twine upload dist/*
+
+make-dist: $(pypidist) $(condadist)
+
+upload-dist: make-dist
+	#anaconda upload --force $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
+	twine upload dist/pymatreader-$(PYPIVERSION).tar.gz
+
+test_target:
+	echo $(ISDEV)
+	echo $(PYPIVERSION)
