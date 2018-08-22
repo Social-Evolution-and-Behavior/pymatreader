@@ -18,3 +18,8 @@ code_quality:
 	--volume /var/run/docker.sock:/var/run/docker.sock \
 	--volume /tmp/cc:/tmp/cc  codeclimate/codeclimate analyze
 
+build-doc:
+	cd doc; make clean; make html
+
+autobuild-doc:
+	sphinx-autobuild doc/source doc/build

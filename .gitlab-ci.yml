@@ -36,6 +36,12 @@ test_flake:
     - pip install -U -r requirements.txt
     - make flake
 
+test_docs:
+  image: python:3
+  script:
+    - pip install -U -r requirements.txt
+    - make build-doc
+
 sast:
   image: docker:stable
   variables:
