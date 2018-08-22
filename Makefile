@@ -42,6 +42,7 @@ clean-dist:
 	rm -rf pymatreader.egg-info
 
 $(pypidist):
+	python setup.py sdist
 
 $(condadist):
 	conda build .
