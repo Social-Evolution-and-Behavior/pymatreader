@@ -13,6 +13,9 @@ ifeq ($(findstring dev,$(VERSION)), dev)
 	ifeq ($(shell echo -n $(PYPIVERSION) | tail -c 1), v)
 		PYPIVERSION:=$(PYPIVERSION)0
 	endif
+	ISDEV:=1
+else
+	ISDEV:=0
 endif
 
 flake:
@@ -40,6 +43,7 @@ autobuild-doc:
 clean-dist:
 	rm -rf dist
 	rm -rf pymatreader.egg-info
+	conda-build purge-all
 
 $(pypidist):
 	python setup.py sdist
@@ -50,9 +54,7 @@ $(condadist):
 make-dist: $(pypidist) $(condadist)
 
 upload-dist: make-dist
-	#anaconda upload --force $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
+ifeq ($(ISDEV), 0)
+    anaconda upload --force $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
+endif
 	twine upload dist/pymatreader-$(PYPIVERSION).tar.gz
-
-test_target:
-	echo $(ISDEV)
-	echo $(PYPIVERSION)
