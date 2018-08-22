@@ -2,6 +2,9 @@
 
 # caution: testing won't work on windows, see README
 
+VERSION_FILE:=VERSION
+VERSION:=$(shell cat ${VERSION_FILE})
+
 flake:
 	@if command -v flake8 > /dev/null; then \
 		echo "Running flake8"; \
@@ -23,3 +26,13 @@ build-doc:
 
 autobuild-doc:
 	sphinx-autobuild doc/source doc/build
+
+clean-dist:
+	rm -rf dist
+	rm -rf pymatreader.egg-info
+
+upload-dist: clean-dist
+	python setup.py sdist
+	conda build .
+	anaconda upload $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
+	twine upload dist/*
