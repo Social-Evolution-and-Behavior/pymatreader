@@ -28,9 +28,11 @@
 import os.path
 from unittest import TestCase
 
-from pymatreader import read_mat
-from .helper_functions import assertDeepAlmostEqual, sanitize_dict, read_xml_data
 from nose.tools import raises
+
+from pymatreader import read_mat
+from .helper_functions import assertDeepAlmostEqual, sanitize_dict, \
+    read_xml_data
 
 TestCase.maxDiff = None
 
@@ -46,42 +48,68 @@ testdata_eeglab_old = 'test_raw.set'
 testdata_cell_struct_v6 = 'cell_struct_v6.mat'
 testdata_cell_struct_v7 = 'cell_struct_v7.mat'
 testdata_cell_struct_v73 = 'cell_struct_v73.mat'
+testdata_bti_v7 = 'bti_raw_v7.mat'
+testdata_bti_v73 = 'bti_raw_v73.mat'
 
 invalid_fname = 'invalid.mat'
 
 
 def test_v6v7():
-    v6_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v6_fname)))
-    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
+    v6_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_v6_fname)))
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
 
     assertDeepAlmostEqual(v6_data, v7_data)
 
 
 def test_v6v73():
-    v6_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v6_fname)))
-    v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v73_fname)))
+    v6_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_v6_fname)))
+    v73_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_v73_fname)))
 
     assertDeepAlmostEqual(v6_data, v73_data)
 
 
 def test_v7v73():
-    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
-    v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v73_fname)))
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
+    v73_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_v73_fname)))
 
     assertDeepAlmostEqual(v7_data, v73_data)
 
 
 def test_xmlv7():
-    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_v7_fname)))
     xml_data = read_xml_data(os.path.join(test_data_folder, testdata_xml))
 
     assertDeepAlmostEqual(v7_data, xml_data)
 
+
 def test_ft_v7v73():
-    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_ft_v7_fname), variable_names=('data_epoched', )))
-    v73_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_ft_v73_fname), variable_names=('data_epoched', )))
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_ft_v7_fname),
+                 variable_names=('data_epoched',)))
+    v73_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_ft_v73_fname),
+                 variable_names=('data_epoched',)))
 
     assertDeepAlmostEqual(v7_data, v73_data)
+
+
+def test_bti_v7v73():
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_bti_v7),
+                 variable_names=('data', )))
+    v73_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_bti_v73),
+                 variable_names=('data',)))
+
+    assertDeepAlmostEqual(v7_data, v73_data)
+
 
 def test_cell_struct_v6v7():
     v6_data = sanitize_dict(
@@ -91,6 +119,7 @@ def test_cell_struct_v6v7():
 
     assertDeepAlmostEqual(v6_data, v7_data)
 
+
 def test_cell_struct_v7v73():
     v7_data = sanitize_dict(
         read_mat(os.path.join(test_data_folder, testdata_cell_struct_v7)))
@@ -99,19 +128,24 @@ def test_cell_struct_v7v73():
 
     assertDeepAlmostEqual(v7_data, v73_data)
 
+
 def test_eeglab_v7v73():
-    v7_data = sanitize_dict(read_mat(os.path.join(test_data_folder, testdata_eeglab_old)))
+    v7_data = sanitize_dict(
+        read_mat(os.path.join(test_data_folder, testdata_eeglab_old)))
 
     v73_data = sanitize_dict(
         read_mat(os.path.join(test_data_folder, testdata_eeglab_h5)))
 
     assertDeepAlmostEqual(v7_data, v73_data)
 
+
 def test_raw_h5_eeglab():
     data = read_mat(os.path.join(test_data_folder, testdata_eeglab_h5))
 
+
 def test_raw_old_eeglab():
     data = read_mat(os.path.join(test_data_folder, testdata_eeglab_old))
+
 
 def test_raw_h5_eeglab_event_type():
     data = read_mat(os.path.join(test_data_folder, testdata_eeglab_h5))
@@ -122,6 +156,7 @@ def test_raw_h5_eeglab_event_type():
     first_event = events[0]
     first_event.type
     first_event.latency
+
 
 def test_raw_old_eeglab_event_type():
     data = read_mat(os.path.join(test_data_folder, testdata_eeglab_old))
