@@ -17,7 +17,7 @@ test_27:
 test_miniconda3:
   image: continuumio/miniconda3
   script:
-    - conda install conda-build=3.14 conda-verify
+    - conda install conda-build conda-verify
     - conda config --add channels obob
     - conda config --add channels conda-forge
     - conda build .
@@ -25,7 +25,7 @@ test_miniconda3:
 test_miniconda2:
   image: continuumio/miniconda
   script:
-    - conda install conda-build=3.14 conda-verify
+    - conda install conda-build conda-verify
     - conda config --add channels obob
     - conda config --add channels conda-forge
     - conda build .
