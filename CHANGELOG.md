@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.19] - 2019-02-14
+
+### Changed
+
+- Reverted pinning version of conda build
+
 ## [0.0.18] - 2019-01-08
 
 ### Changed
