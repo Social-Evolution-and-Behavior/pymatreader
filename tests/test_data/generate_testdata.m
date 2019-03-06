@@ -48,6 +48,8 @@ a_single_char = 'b';
 
 an_empty_string = '';
 
+a_unit64 = uint64(6273309986953);
+
 a_cell_array = {};
 for idx_cells = 1:100
   a_cell_array{idx_cells} = rand(2, 5);

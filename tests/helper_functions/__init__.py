@@ -124,6 +124,9 @@ def _convert_strings2numbers_xml(xml_data):
                 xml_data = xml_data[0][0]
         except ValueError:
             pass
+    elif isinstance(xml_data, string_types) and xml_data.startswith('[uint'):
+        num_str = xml_data[8:-2]
+        return int(num_str)
 
     return xml_data
 
