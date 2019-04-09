@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.20] - 2019-04-09
+
+### Added
+
+- Releases are tagged automatically on gitlab.
+
 ## [0.0.19] - 2019-03-06
 
 ### Changed
