@@ -54,7 +54,10 @@ $(condadist):
 make-dist: $(pypidist) $(condadist)
 
 upload-dist: make-dist
+	twine upload dist/pymatreader-$(PYPIVERSION).tar.gz
 ifeq ($(ISDEV), 0)
 	anaconda upload --force $(CONDA_PREFIX)/conda-bld/noarch/pymatreader-$(VERSION)-py_0.tar.bz2
+	git tag -a v$(VERSION) -m "version $(VERSION)"
+	git push origin v$(VERSION)
 endif
-	twine upload dist/pymatreader-$(PYPIVERSION).tar.gz
+
